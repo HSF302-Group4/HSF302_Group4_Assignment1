@@ -1,5 +1,6 @@
 package com.fu.cinema.repository;
 
+import com.fu.cinema.dto.MovieRevenueDTO;
 import com.fu.cinema.entity.Booking;
 import com.fu.cinema.enums.BookingStatus;
 import org.springframework.data.domain.Page;
@@ -71,6 +72,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                          @Param("to") LocalDateTime to,
                          @Param("kw") String keyword,
                          Pageable pageable);
+
+    // ===== Q7: doanh thu theo phim trong kỳ, giảm dần (constructor expression → DTO) =====
+    @Query("""
+            SELECT new com.fu.cinema.dto.MovieRevenueDTO(m.title, COUNT(t), SUM(t.price))
+            FROM Ticket t
+            JOIN t.booking b
+            JOIN t.showtime s
+            JOIN s.movie m
+            WHERE b.status = com.fu.cinema.enums.BookingStatus.CONFIRMED
+              AND b.bookingDate >= :from AND b.bookingDate < :to
+            GROUP BY m.movieId, m.title
+            ORDER BY SUM(t.price) DESC
+            """)
+    List<MovieRevenueDTO> revenueByMovie(@Param("from") LocalDateTime from,
+                                         @Param("to") LocalDateTime to);
 
     // ===== Q8: đơn CONFIRMED trong kỳ, mới nhất trước =====
     @Query("""
