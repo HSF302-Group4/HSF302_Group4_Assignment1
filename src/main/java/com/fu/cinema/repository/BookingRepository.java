@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -100,4 +101,25 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             """)
     List<Booking> findConfirmedInPeriod(@Param("from") LocalDateTime from,
                                         @Param("to") LocalDateTime to);
+
+    // ===== Q9: huỷ hàng loạt đơn của một suất chiếu (BR-09) =====
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+            UPDATE Booking b SET b.status = com.fu.cinema.enums.BookingStatus.CANCELLED
+            WHERE b.showtime.showtimeId = :showtimeId
+              AND b.status <> com.fu.cinema.enums.BookingStatus.CANCELLED
+            """)
+    int cancelAllByShowtime(@Param("showtimeId") Long showtimeId);
+
+    // ===== Q12: khách đã xem phim chưa (BR-16) =====
+    @Query("""
+            SELECT COUNT(b) FROM Booking b
+            WHERE b.customer.customerId = :customerId
+              AND b.showtime.movie.movieId = :movieId
+              AND b.status = com.fu.cinema.enums.BookingStatus.CONFIRMED
+              AND b.showtime.endTime < :now
+            """)
+    long countWatched(@Param("customerId") Long customerId,
+                      @Param("movieId") Long movieId,
+                      @Param("now") LocalDateTime now);
 }
