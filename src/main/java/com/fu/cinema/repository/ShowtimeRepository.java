@@ -4,12 +4,10 @@ import com.fu.cinema.entity.Booking;
 import com.fu.cinema.entity.Showtime;
 import com.fu.cinema.enums.BookingStatus;
 import com.fu.cinema.enums.ShowtimeStatus;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
@@ -27,60 +25,53 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
     List<Showtime> findByMovie_MovieIdAndStatusAndStartTimeAfterOrderByStartTimeAsc(
             Long movieId, ShowtimeStatus status, LocalDateTime after);
 
-    // (custom query: xem TODO 10)
-    // ===== Q5: chi tiết đơn kèm khách, suất chiếu, phim, phòng, vé =====
-    @Query("""
-            SELECT DISTINCT b FROM Booking b
-            JOIN FETCH b.customer c
-            JOIN FETCH b.showtime s
-            JOIN FETCH s.movie
-            JOIN FETCH s.room
-            LEFT JOIN FETCH b.tickets
-            WHERE b.bookingId = :id
-            """)
-    Optional<Booking> findDetailById(@Param("id") Long id);
 
-    // ===== Q6: lọc đơn cho Admin (trạng thái, khoảng ngày, từ khoá khách hàng) =====
+
+    // (custom query: xem TODO 10)
+
+    // ===== Danh sách suất chiếu cho Admin (lọc tuỳ chọn) =====
     @Query(value = """
-            SELECT b FROM Booking b
-            JOIN FETCH b.customer c
-            JOIN FETCH b.showtime s
-            JOIN FETCH s.movie m
-            WHERE (:status IS NULL OR b.status = :status)
-              AND (:from IS NULL OR b.bookingDate >= :from)
-              AND (:to IS NULL OR b.bookingDate < :to)
-              AND (:kw IS NULL
-                   OR LOWER(c.fullName) LIKE LOWER(CONCAT('%', :kw, '%'))
-                   OR LOWER(c.email)    LIKE LOWER(CONCAT('%', :kw, '%'))
-                   OR c.mobile          LIKE CONCAT('%', :kw, '%'))
+            SELECT s FROM Showtime s JOIN FETCH s.movie m JOIN FETCH s.room r
+            WHERE (:movieId IS NULL OR m.movieId = :movieId)
+              AND (:roomId IS NULL OR r.roomId = :roomId)
+              AND (:from IS NULL OR s.startTime >= :from)
+              AND (:to IS NULL OR s.startTime < :to)
             """,
             countQuery = """
-            SELECT COUNT(b) FROM Booking b JOIN b.customer c
-            WHERE (:status IS NULL OR b.status = :status)
-              AND (:from IS NULL OR b.bookingDate >= :from)
-              AND (:to IS NULL OR b.bookingDate < :to)
-              AND (:kw IS NULL
-                   OR LOWER(c.fullName) LIKE LOWER(CONCAT('%', :kw, '%'))
-                   OR LOWER(c.email)    LIKE LOWER(CONCAT('%', :kw, '%'))
-                   OR c.mobile          LIKE CONCAT('%', :kw, '%'))
+            SELECT COUNT(s) FROM Showtime s
+            WHERE (:movieId IS NULL OR s.movie.movieId = :movieId)
+              AND (:roomId IS NULL OR s.room.roomId = :roomId)
+              AND (:from IS NULL OR s.startTime >= :from)
+              AND (:to IS NULL OR s.startTime < :to)
             """)
-    Page<Booking> search(@Param("status") BookingStatus status,
-                         @Param("from") LocalDateTime from,
-                         @Param("to") LocalDateTime to,
-                         @Param("kw") String keyword,
-                         Pageable pageable);
+    Page<Showtime> search(@Param("movieId") Long movieId,
+                          @Param("roomId") Long roomId,
+                          @Param("from") LocalDateTime from,
+                          @Param("to") LocalDateTime to,
+                          Pageable pageable);
 
-    // ===== Q8: đơn CONFIRMED trong kỳ, mới nhất trước =====
+    @Query("SELECT s FROM Showtime s JOIN FETCH s.movie JOIN FETCH s.room WHERE s.showtimeId = :id")
+    Optional<Showtime> findDetailById(@Param("id") Long id);
+
+    // ===== Q3: suất chiếu chồng giờ trong cùng phòng (BR-08) =====
     @Query("""
-            SELECT b FROM Booking b
-            JOIN FETCH b.customer
-            JOIN FETCH b.showtime s
-            JOIN FETCH s.movie
-            WHERE b.status = com.fu.cinema.enums.BookingStatus.CONFIRMED
-              AND b.bookingDate >= :from AND b.bookingDate < :to
-            ORDER BY b.bookingDate DESC
+            SELECT s FROM Showtime s JOIN FETCH s.movie
+            WHERE s.room.roomId = :roomId
+              AND s.status <> com.fu.cinema.enums.ShowtimeStatus.CANCELLED
+              AND s.startTime < :end
+              AND s.endTime > :start
+              AND (:excludeId IS NULL OR s.showtimeId <> :excludeId)
             """)
-    List<Booking> findConfirmedInPeriod(@Param("from") LocalDateTime from,
-                                        @Param("to") LocalDateTime to);
-    
+    List<Showtime> findOverlapping(@Param("roomId") Long roomId,
+                                   @Param("start") LocalDateTime start,
+                                   @Param("end") LocalDateTime end,
+                                   @Param("excludeId") Long excludeId);
+
+    // Khoá dòng suất chiếu khi đặt vé → 2 người đặt cùng lúc sẽ được xử lý tuần tự
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT s FROM Showtime s WHERE s.showtimeId = :id")
+    Optional<Showtime> findByIdForUpdate(@Param("id") Long id);
+
+
+
 }
