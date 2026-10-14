@@ -22,6 +22,10 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
         boolean forbidden = (path.startsWith("/admin") && user.getRole() != Role.ADMIN)
                 || (path.startsWith("/customer") && user.getRole() != Role.CUSTOMER);
+        if (forbidden) {                                                     // sai vai trò → 403
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
         return true;
     }
 }
