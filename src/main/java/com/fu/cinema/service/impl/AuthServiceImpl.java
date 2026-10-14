@@ -33,6 +33,10 @@ public class AuthServiceImpl implements AuthService {
                 .filter(a -> passwordEncoder.matches(password, a.getPassword()))
                 .orElseThrow(() -> new BusinessException("Tên đăng nhập hoặc mật khẩu không đúng"));
 
+        if (account.getStatus() == AccountStatus.LOCKED) {                       // BR-03
+            throw new BusinessException("Tài khoản đã bị khoá. Vui lòng liên hệ quản trị viên");
+        }
+
         if (account.getRole() == Role.ADMIN) {
             return new SessionUser(account.getAccountId(), null, "Administrator", Role.ADMIN);
         }
