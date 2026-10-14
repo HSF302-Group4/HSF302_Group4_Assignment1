@@ -37,4 +37,8 @@ public class Ticket {
         this.seatCode = seatCode;
         this.price = price;
     }
+
+    public void setBooking(Booking booking) {
+        this.booking = booking;
+    }
 }
