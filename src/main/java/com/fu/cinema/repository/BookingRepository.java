@@ -122,4 +122,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     long countWatched(@Param("customerId") Long customerId,
                       @Param("movieId") Long movieId,
                       @Param("now") LocalDateTime now);
+
+
+
+
+    
 }
