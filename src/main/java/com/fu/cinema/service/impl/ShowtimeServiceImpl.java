@@ -83,14 +83,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         apply(form, showtime, showtimeId);
     }
 
-    @Override
-    @Transactional
-    public boolean delete(Long showtimeId) {
-        Showtime showtime = showtimeRepository.findById(showtimeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Suất chiếu", showtimeId));
-        showtimeRepository.delete(showtime);
-        return true;
-    }
+
 
     @Override
     public List<Showtime> findUpcomingByMovie(Long movieId) {
@@ -160,5 +153,18 @@ public class ShowtimeServiceImpl implements ShowtimeService {
         showtime.setEndTime(end);
         showtime.setTicketPrice(form.getTicketPrice());
         showtime.setStatus(form.getStatus());
+    }
+    @Override
+    @Transactional
+    public boolean delete(Long showtimeId) {
+        Showtime showtime = showtimeRepository.findById(showtimeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Suất chiếu", showtimeId));
+        if (bookingRepository.existsByShowtime_ShowtimeId(showtimeId)) {           // BR-09
+            showtime.setStatus(ShowtimeStatus.CANCELLED);
+            bookingRepository.cancelAllByShowtime(showtimeId);                      // Q9 — @Modifying
+            return false;
+        }
+        showtimeRepository.delete(showtime);
+        return true;
     }
 }
