@@ -92,4 +92,7 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
             "GROUP BY r.roomName ORDER BY r.roomName ASC")
     List<RoomShowtimeCount> countTodayByRoom(@Param("startOfDay") LocalDateTime startOfDay, @Param("endOfDay") LocalDateTime endOfDay);
 
+
+
+
 }
