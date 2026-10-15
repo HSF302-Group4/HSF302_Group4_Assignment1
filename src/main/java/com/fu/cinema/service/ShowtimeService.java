@@ -27,4 +27,5 @@ public interface ShowtimeService {
     SeatMap getSeatMap(Long showtimeId);
 
     List<RoomShowtimeCount> countTodayByRoom();
+
 }
