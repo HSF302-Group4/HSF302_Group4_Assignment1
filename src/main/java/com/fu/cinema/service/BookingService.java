@@ -28,4 +28,5 @@ public interface BookingService {
     void cancelByAdmin(Long bookingId);
 
     long countPending();
+
 }
