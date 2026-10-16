@@ -30,8 +30,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @EntityGraph(attributePaths = {"showtime", "showtime.movie", "showtime.room"})
     Page<Booking> findByCustomer_CustomerIdAndStatus(Long customerId, BookingStatus status, Pageable pageable);
 
-    // (custom query: xem TODO 10)
-
     // ===== Q5: chi tiết đơn kèm khách, suất chiếu, phim, phòng, vé =====
     @Query("""
             SELECT DISTINCT b FROM Booking b
@@ -120,11 +118,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
               AND b.showtime.endTime < :now
             """)
     long countWatched(@Param("customerId") Long customerId,
-                      @Param("movieId") Long movieId,
-                      @Param("now") LocalDateTime now);
-
-
-
-
-    
+                       @Param("movieId") Long movieId,
+                       @Param("now") LocalDateTime now);
 }
