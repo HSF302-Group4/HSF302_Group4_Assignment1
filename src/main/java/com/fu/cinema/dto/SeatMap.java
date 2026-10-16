@@ -15,7 +15,7 @@ public class SeatMap {
     private Showtime showtime;
     private List<String> rows;
     private Integer seatsPerRow;
-    private Set<String> soldSeatCodes;
+    private Set<String> soldSeats;
     public boolean isSold(String seatCode) {
         return soldSeats != null && soldSeats.contains(seatCode);
     }
