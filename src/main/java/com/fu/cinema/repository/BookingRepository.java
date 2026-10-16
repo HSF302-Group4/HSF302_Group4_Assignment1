@@ -118,6 +118,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
               AND b.showtime.endTime < :now
             """)
     long countWatched(@Param("customerId") Long customerId,
-                       @Param("movieId") Long movieId,
-                       @Param("now") LocalDateTime now);
+                      @Param("movieId") Long movieId,
+                      @Param("now") LocalDateTime now);
+    @EntityGraph(attributePaths = {"showtime.movie", "showtime.room"})
+    Page<Booking> findByCustomer_CustomerIdOrderByBookingDateDesc(Long customerId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"showtime.movie", "showtime.room"})
+    Page<Booking> findByCustomer_CustomerIdAndStatusOrderByBookingDateDesc(Long customerId, BookingStatus status, Pageable pageable);
+
+
+
 }
