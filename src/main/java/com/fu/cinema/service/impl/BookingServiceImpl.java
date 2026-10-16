@@ -48,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
     // ================= Customer =================
 
     @Override
-    @Transactional
+    @Transactional                                               // BR-12: Booking + Ticket trong 1 transaction
     public Booking create(Long customerId, BookingRequest request) {
         // 1. Chuẩn hoá & kiểm tra danh sách ghế
         List<String> seats = request.getSeatCodes().stream()
@@ -64,11 +64,11 @@ public class BookingServiceImpl implements BookingService {
             throw new BusinessException("Mỗi đơn tối đa " + MAX_SEATS_PER_BOOKING + " ghế");
         }
 
-        // 2. Khoá suất chiếu (PESSIMISTIC_WRITE)
+        // 2. Khoá suất chiếu (PESSIMISTIC_WRITE) → các yêu cầu đặt vé cùng suất được xử lý tuần tự
         Showtime showtime = showtimeRepository.findByIdForUpdate(request.getShowtimeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Suất chiếu", request.getShowtimeId()));
         if (showtime.getStatus() != ShowtimeStatus.OPEN || !showtime.getStartTime().isAfter(LocalDateTime.now())) {
-            throw new BusinessException("Suất chiếu không còn mở bán");
+            throw new BusinessException("Suất chiếu không còn mở bán");                       // BR-10
         }
 
         // 3. Ghế phải tồn tại trong phòng
@@ -81,7 +81,7 @@ public class BookingServiceImpl implements BookingService {
             }
         }
 
-        // 4. Ghế chưa được bán (kiểm tra lại TRONG transaction)
+        // 4. Ghế chưa được bán (kiểm tra lại TRONG transaction, không tin dữ liệu từ form)
         Set<String> sold = new HashSet<>(ticketRepository.findSoldSeatCodes(showtime.getShowtimeId()));
         List<String> taken = seats.stream().filter(sold::contains).toList();
         if (!taken.isEmpty()) {
@@ -98,7 +98,7 @@ public class BookingServiceImpl implements BookingService {
                     + minAge + " tuổi trở lên");
         }
 
-        // 6. Tạo đơn + vé
+        // 6. Tạo đơn + vé (cascade ALL → lưu Booking là lưu luôn Ticket)
         Booking booking = new Booking();
         booking.setCustomer(customer);
         booking.setShowtime(showtime);
@@ -121,6 +121,7 @@ public class BookingServiceImpl implements BookingService {
     public Booking getDetailForCustomer(Long bookingId, Long customerId) {
         Booking booking = getDetail(bookingId);
         if (!booking.getCustomer().getCustomerId().equals(customerId)) {
+            // Không tiết lộ đơn của người khác có tồn tại hay không → trả 404
             throw new ResourceNotFoundException("Đơn đặt vé", bookingId);
         }
         return booking;
@@ -134,7 +135,7 @@ public class BookingServiceImpl implements BookingService {
             throw new BusinessException("Đơn đã được huỷ trước đó");
         }
         if (LocalDateTime.now().isAfter(booking.getShowtime().getStartTime().minusHours(CANCEL_BEFORE_HOURS))) {
-            throw new BusinessException("Chỉ được huỷ đơn trước giờ chiếu ít nhất " + CANCEL_BEFORE_HOURS + " giờ");
+            throw new BusinessException("Chỉ được huỷ đơn trước giờ chiếu ít nhất " + CANCEL_BEFORE_HOURS + " giờ"); // BR-14
         }
         booking.setStatus(BookingStatus.CANCELLED);
     }
@@ -163,7 +164,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public void confirm(Long bookingId) {
         Booking booking = getDetail(bookingId);
-        if (booking.getStatus() != BookingStatus.PENDING) {
+        if (booking.getStatus() != BookingStatus.PENDING) {                               // BR-13
             throw new BusinessException("Chỉ xác nhận được đơn đang ở trạng thái PENDING");
         }
         booking.setStatus(BookingStatus.CONFIRMED);
@@ -183,9 +184,4 @@ public class BookingServiceImpl implements BookingService {
     public long countPending() {
         return bookingRepository.countByStatus(BookingStatus.PENDING);
     }
-
-
-
-
-
 }
