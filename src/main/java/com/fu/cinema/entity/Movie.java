@@ -20,10 +20,10 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 200, columnDefinition = "NVARCHAR(200)")
     private String title;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, columnDefinition = "NVARCHAR(100)")
     private String director;
 
     @Column(nullable = false)
@@ -36,10 +36,10 @@ public class Movie {
     @Column(nullable = false, length = 10)
     private AgeRating ageRating;
 
-    @Column(nullable = false, length = 2000)
+    @Column(nullable = false, length = 2000, columnDefinition = "NVARCHAR(500)")
     private String description;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 500, columnDefinition = "NVARCHAR(500)")
     private String posterUrl;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
