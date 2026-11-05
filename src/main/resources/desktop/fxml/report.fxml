@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.fu.cinema.desktop.controller.ReportController"
+      styleClass="page" spacing="12" fillWidth="true">
+
+    <!-- Tiêu đề -->
+    <Label text="Báo cáo doanh thu" styleClass="page-title"/>
+
+    <!-- Bộ lọc thời gian -->
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Từ ngày:"/>
+        <DatePicker fx:id="dpStart" prefWidth="150"/>
+        <Label text="Đến ngày:"/>
+        <DatePicker fx:id="dpEnd" prefWidth="150"/>
+        <Button fx:id="btnGenerate" text="Tạo báo cáo" styleClass="button,primary"
+                onAction="#onGenerate" prefWidth="130"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="btnExport" text="Xuất CSV" onAction="#onExport" prefWidth="110"/>
+    </HBox>
+
+    <!-- Thông báo không có dữ liệu -->
+    <Label fx:id="lblEmpty" text="Không có dữ liệu"
+           style="-fx-text-fill: #6b7280; -fx-font-style: italic;" visible="true"/>
+
+    <!-- Biểu đồ: BarChart + PieChart nằm ngang -->
+    <HBox spacing="16" VBox.vgrow="ALWAYS">
+        <!-- BarChart doanh thu theo phim -->
+        <BarChart fx:id="chartRevenue" HBox.hgrow="ALWAYS" prefHeight="280" animated="false">
+            <xAxis>
+                <CategoryAxis label="Phim"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Doanh thu"/>
+            </yAxis>
+        </BarChart>
+
+        <!-- PieChart tỷ trọng số vé -->
+        <PieChart fx:id="pieTickets" prefWidth="300" prefHeight="280"
+                  title="Tỷ trọng số vé" animated="false"/>
+    </HBox>
+
+    <!-- Dòng tổng kết -->
+    <Label fx:id="lblTotals" styleClass="total"/>
+
+    <!-- Bảng đơn hàng CONFIRMED -->
+    <Label text="Danh sách đơn hàng (CONFIRMED)" style="-fx-font-weight: bold;"/>
+    <TableView fx:id="tblBookings" VBox.vgrow="ALWAYS" prefHeight="220">
+        <columns>
+            <TableColumn fx:id="colId"       text="Mã đơn"     prefWidth="80"/>
+            <TableColumn fx:id="colDate"     text="Ngày đặt"   prefWidth="150"/>
+            <TableColumn fx:id="colCustomer" text="Khách hàng" prefWidth="180"/>
+            <TableColumn fx:id="colMovie"    text="Phim"       prefWidth="200"/>
+            <TableColumn fx:id="colTotal"    text="Tổng tiền"  prefWidth="130" style="-fx-alignment: CENTER-RIGHT;"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
+        <placeholder>
+            <Label text="Không có dữ liệu"/>
+        </placeholder>
+    </TableView>
+
+</VBox>
