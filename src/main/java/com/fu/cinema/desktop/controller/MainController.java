@@ -1,5 +1,7 @@
 package com.fu.cinema.desktop.controller;
 
+import com.fu.cinema.desktop.session.DesktopSession;
+
 import com.fu.cinema.navigation.SceneManager;
 import com.fu.cinema.navigation.View;
 import javafx.animation.Animation;
@@ -36,7 +38,7 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        lblUser.textProperty().bind(Bindings.concat("Nhân viên: ", session.displayNameProperty()));
+        lblUser.textProperty().bind(Bindings.concat("NhÃ¢n viÃªn: ", session.displayNameProperty()));
         clock = new Timeline(new KeyFrame(Duration.seconds(1),
                 e -> lblClock.setText(LocalDateTime.now().format(CLOCK))));
         clock.setCycleCount(Animation.INDEFINITE);
