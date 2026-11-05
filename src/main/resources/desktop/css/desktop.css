@@ -23,3 +23,8 @@
 .legend-sold     { -fx-background-color: #6b7280; }
 .total           { -fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #e50914; }
 .row-label       { -fx-font-weight: bold; -fx-min-width: 24; -fx-alignment: center; }
+
+/* Trạng thái đơn đặt vé */
+.st-pending   { -fx-text-fill: #b45309; -fx-font-weight: bold; }
+.st-confirmed { -fx-text-fill: #15803d; -fx-font-weight: bold; }
+.st-cancelled { -fx-text-fill: #b91c1c; }
