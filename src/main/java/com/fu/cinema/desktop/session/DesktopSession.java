@@ -6,6 +6,7 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import org.springframework.stereotype.Component;
 
+/** Thay cho HttpSession của web. Singleton: 1 người dùng / 1 cửa sổ. */
 @Component
 public class DesktopSession {
 

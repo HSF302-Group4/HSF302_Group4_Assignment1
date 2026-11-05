@@ -37,7 +37,7 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        lblUser.textProperty().bind(Bindings.concat("Nhân viên: ", session.displayNameProperty()));
+        lblUser.textProperty().bind(Bindings.concat("NhÃ¢n viÃªn: ", session.displayNameProperty()));
         clock = new Timeline(new KeyFrame(Duration.seconds(1),
                 e -> lblClock.setText(LocalDateTime.now().format(CLOCK))));
         clock.setCycleCount(Animation.INDEFINITE);
