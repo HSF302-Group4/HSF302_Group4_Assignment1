@@ -1,5 +1,6 @@
 package com.fu.cinema.desktop.controller;
 
+import com.fu.cinema.desktop.session.DesktopSession;
 import com.fu.cinema.navigation.SceneManager;
 import com.fu.cinema.navigation.View;
 import javafx.animation.Animation;
