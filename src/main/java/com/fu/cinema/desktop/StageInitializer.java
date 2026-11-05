@@ -1,7 +1,8 @@
 package com.fu.cinema.desktop;
 
+import com.fu.cinema.navigation.SceneManager;
+import com.fu.cinema.navigation.View;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.View;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
