@@ -19,10 +19,10 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long genreId;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, unique = true, length = 50, columnDefinition = "NVARCHAR(100)")
     private String genreName;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 500, columnDefinition = "NVARCHAR(500)")
     private String description;
 
     @OneToMany(mappedBy = "genre")

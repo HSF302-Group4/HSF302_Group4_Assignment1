@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.fu.cinema.desktop.component.SeatMapView?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.fu.cinema.desktop.controller.CounterSaleController"
+            styleClass="page">
+    <left>
+        <VBox spacing="10" prefWidth="320" minWidth="300" style="-fx-padding: 0 16 0 0;">
+            <Label text="BÁN VÉ TẠI QUẦY" styleClass="page-title"/>
+
+            <Label text="Khách hàng:" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="tfCustomer" promptText="Tìm khách: tên / email / SĐT"/>
+            <ListView fx:id="lvCustomers" prefHeight="130"/>
+
+            <Label text="Phim:" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="cbMovie" promptText="-- Chọn phim --" maxWidth="Infinity"/>
+
+            <Label text="Suất chiếu:" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="cbShowtime" promptText="-- Chọn suất chiếu --" maxWidth="Infinity"/>
+
+            <Separator/>
+
+            <Label fx:id="lblSeats" text="Ghế: " wrapText="true"/>
+            <Label fx:id="lblTotal" text="Tổng: 0 đ" styleClass="total"/>
+            <CheckBox fx:id="chkPaid" text="Đã thanh toán (BR-D2)" selected="true"/>
+
+            <Button fx:id="btnSell" text="Bán vé" onAction="#onSell"
+                    styleClass="primary" maxWidth="Infinity" prefHeight="38"/>
+        </VBox>
+    </left>
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent;">
+            <SeatMapView fx:id="seatMap"/>
+        </ScrollPane>
+    </center>
+</BorderPane>
