@@ -5,9 +5,11 @@ import com.fu.cinema.desktop.model.GenreItem;
 import com.fu.cinema.desktop.model.MovieRow;
 import com.fu.cinema.desktop.util.AlertUtil;
 import com.fu.cinema.desktop.util.FxAsync;
+import com.fu.cinema.dto.MovieForm;
 import com.fu.cinema.enums.AgeRating;
 import com.fu.cinema.enums.MovieStatus;
 import com.fu.cinema.navigation.SceneManager;
+import com.fu.cinema.navigation.View;
 import javafx.animation.PauseTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
@@ -18,6 +20,7 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Window;
 import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
@@ -246,22 +249,31 @@ public class MovieController {
     }
 
     private void openDialog(Long movieId) {
-        // Nơi mở Dialog thêm/sửa phim — sẽ hoàn thiện chi tiết ở TODO 40
-        AlertUtil.info(movieId == null ? "Dialog thêm phim mới (sẽ hoàn thiện ở TODO 40)"
-                : "Dialog sửa phim #" + movieId + " (sẽ hoàn thiện ở TODO 40)");
+        Window owner = table.getScene().getWindow();
+        fxAsync.run(() -> new Object[]{ facade.genres(), movieId == null ? new MovieForm() : facade.getForm(movieId) },
+                data -> {
+                    @SuppressWarnings("unchecked") List<GenreItem> genres = (List<GenreItem>) data[0];
+                    SceneManager.Loaded<MovieDialogController> dlg = sceneManager.load(View.MOVIE_DIALOG);
+                    dlg.controller().open(owner, (MovieForm) data[1], genres).ifPresent(form ->
+                            fxAsync.runVoid(() -> facade.save(form), () -> {
+                                AlertUtil.info("Đã lưu phim");
+                                load(pagination.getCurrentPageIndex());
+                            }, root));
+                }, root);
     }
 
-    private void onDelete(MovieRow row) {
-        if (row == null) return;
-        if (AlertUtil.confirm("Xoá phim \"" + row.title() + "\"?")) {
-            fxAsync.run(() -> facade.delete(row.id()), deleted -> {
-                if (deleted) {
-                    AlertUtil.info("Đã xoá phim thành công!");
-                } else {
-                    AlertUtil.info("Phim đã có suất chiếu: Đã chuyển sang trạng thái STOPPED (BR-06).");
-                }
-                load(pagination.getCurrentPageIndex());
-            }, root);
-        }
+    @FXML
+    private void onDelete() {
+        MovieRow m = table.getSelectionModel().getSelectedItem();
+        onDelete(m);
+    }
+
+    private void onDelete(MovieRow m) {
+        if (m == null || !AlertUtil.confirm("Xoá phim \"" + m.title() + "\"?")) return;
+        fxAsync.run(() -> facade.delete(m.id()), deleted -> {
+            // BR-06: Phim có suất chiếu -> chuyển STOPPED; chưa có suất -> xoá
+            AlertUtil.info(deleted ? "Đã xoá phim" : "Phim đã có suất chiếu → đã chuyển sang STOPPED");
+            load(pagination.getCurrentPageIndex());
+        }, root);
     }
 }
