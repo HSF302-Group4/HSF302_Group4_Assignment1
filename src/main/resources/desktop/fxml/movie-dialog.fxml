@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="com.fu.cinema.desktop.controller.MovieDialogController"
+          fx:id="root" hgap="12" vgap="10" prefWidth="540" style="-fx-padding: 16;">
+
+    <columnConstraints>
+        <ColumnConstraints minWidth="120" prefWidth="130"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <!-- Tên phim -->
+    <Label text="Tên phim (*):" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <TextField fx:id="tfTitle" promptText="Tối đa 200 ký tự" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+    <!-- Đạo diễn -->
+    <Label text="Đạo diễn (*):" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="tfDirector" promptText="Tên đạo diễn" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <!-- Thời lượng (Spinner min=1 theo Guide để Bean Validation @Min(30) bắt lỗi) -->
+    <Label text="Thời lượng (*):" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <Spinner fx:id="spDuration" editable="true" maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <!-- Ngày khởi chiếu -->
+    <Label text="Ngày khởi chiếu (*):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <DatePicker fx:id="dpRelease" maxWidth="Infinity" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+    <!-- Độ tuổi -->
+    <Label text="Độ tuổi (*):" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="cbAgeRating" maxWidth="Infinity" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <!-- Thể loại -->
+    <Label text="Thể loại (*):" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="cbGenre" promptText="-- Chọn thể loại --" maxWidth="Infinity" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+    <!-- Trạng thái -->
+    <Label text="Trạng thái (*):" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="cbStatus" maxWidth="Infinity" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+    <!-- Poster URL -->
+    <Label text="Poster URL (*):" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
+    <TextField fx:id="tfPoster" promptText="https://..." GridPane.rowIndex="7" GridPane.columnIndex="1"/>
+
+    <!-- Mô tả -->
+    <Label text="Mô tả (*):" GridPane.rowIndex="8" GridPane.columnIndex="0" GridPane.valignment="TOP"/>
+    <TextArea fx:id="taDescription" promptText="Tối đa 2000 ký tự" wrapText="true" prefRowCount="4"
+              GridPane.rowIndex="8" GridPane.columnIndex="1"/>
+</GridPane>
