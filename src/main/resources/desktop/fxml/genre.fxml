@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.fu.cinema.desktop.controller.GenreController"
+            fx:id="root" styleClass="page">
+    <top>
+        <HBox spacing="16" alignment="CENTER_LEFT" style="-fx-padding: 0 0 12 0;">
+            <Label text="QUẢN LÝ THỂ LOẠI" styleClass="page-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Làm mới" onAction="#onRefresh"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="table">
+            <columns>
+                <TableColumn fx:id="colName" text="Tên thể loại" prefWidth="200"/>
+                <TableColumn fx:id="colDesc" text="Mô tả" prefWidth="400"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+
+    <right>
+        <VBox fx:id="formBox" spacing="12" prefWidth="320" minWidth="300" style="-fx-padding: 0 0 0 16;">
+            <Label fx:id="lblTitle" text="Thêm thể loại mới" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+            <Label text="Tên thể loại (*):"/>
+            <TextField fx:id="tfName" promptText="Tối đa 50 ký tự"/>
+
+            <Label text="Mô tả (*):"/>
+            <TextArea fx:id="taDesc" promptText="Tối đa 500 ký tự" wrapText="true" prefRowCount="5"/>
+
+            <HBox spacing="8" alignment="CENTER_LEFT" style="-fx-padding: 8 0 0 0;">
+                <Button text="Tạo mới" onAction="#onNew"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnDelete" text="Xoá" onAction="#onDelete"/>
+                <Button fx:id="btnSave" text="Lưu" onAction="#onSave" styleClass="primary"/>
+            </HBox>
+        </VBox>
+    </right>
+</BorderPane>
