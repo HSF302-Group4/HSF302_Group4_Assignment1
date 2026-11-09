@@ -96,4 +96,12 @@ public class CounterSaleFacade {
     public static final Comparator<String> SEAT_ORDER = Comparator
             .comparing((String s) -> s.charAt(0))
             .thenComparingInt(s -> Integer.parseInt(s.substring(1)));
+
+
+    public SeatMapData seatMap(Long showtimeId) {
+        SeatMap m = showtimeService.getSeatMap(showtimeId);          // BR-10: suất không OPEN/đã bắt đầu → BusinessException
+        Showtime s = m.getShowtime();
+        return new SeatMapData(showtimeId, s.getMovie().getTitle(), s.getRoom().getRoomName(), s.getStartTime(),
+                s.getTicketPrice(), List.copyOf(m.getRowLabels()), m.getSeatsPerRow(), Set.copyOf(m.getSoldSeats()));
+    }
 }
