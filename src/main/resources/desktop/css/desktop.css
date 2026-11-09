@@ -31,3 +31,30 @@
 /* Dòng phim đã ngừng chiếu (TODO 39) */
 .table-row-cell:stopped            { -fx-background-color: #eeeeee; }
 .table-row-cell:stopped .table-cell { -fx-text-fill: #9e9e9e; }
+
+
+/* KPI Cards & Chart (TODO 37) */
+.kpi {
+    -fx-padding: 16;
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 6;
+    -fx-spacing: 6;
+}
+.kpi-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7280;
+}
+.kpi-value {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #111827;
+}
+.chart-card {
+    -fx-padding: 16;
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 6;
+}

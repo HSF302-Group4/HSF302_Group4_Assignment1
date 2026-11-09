@@ -10,14 +10,14 @@
     <left>
         <VBox styleClass="sidebar" spacing="4">
             <Label text="FU CINEMA" styleClass="brand"/>
-            <Button text="Dashboard"        onAction="#onDashboard"   maxWidth="Infinity"/>
-            <Button text="Bán vé tại quầy"  onAction="#onCounterSale" maxWidth="Infinity" styleClass="primary"/>
-            <Button text="Đơn đặt vé"       onAction="#onBooking"     maxWidth="Infinity"/>
+            <Button fx:id="btnDashboard"   text="Dashboard"        onAction="#onDashboard"   maxWidth="Infinity"/>
+            <Button fx:id="btnCounterSale" text="Bán vé tại quầy"  onAction="#onCounterSale" maxWidth="Infinity"/>
+            <Button fx:id="btnBooking"     text="Đơn đặt vé"       onAction="#onBooking"     maxWidth="Infinity"/>
             <Separator/>
-            <Button text="Thể loại"          onAction="#onGenre"       maxWidth="Infinity"/>
-            <Button text="Phim"              onAction="#onMovie"       maxWidth="Infinity"/>
-            <Button text="Phòng &amp; Suất chiếu" onAction="#onSchedule" maxWidth="Infinity"/>
-            <Button text="Báo cáo"           onAction="#onReport"      maxWidth="Infinity"/>
+            <Button fx:id="btnGenre"       text="Thể loại"          onAction="#onGenre"       maxWidth="Infinity"/>
+            <Button fx:id="btnMovie"       text="Phim"              onAction="#onMovie"       maxWidth="Infinity"/>
+            <Button fx:id="btnSchedule"    text="Phòng &amp; Suất chiếu" onAction="#onSchedule" maxWidth="Infinity"/>
+            <Button fx:id="btnReport"      text="Báo cáo"           onAction="#onReport"      maxWidth="Infinity"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="Đăng xuất" onAction="#onLogout" maxWidth="Infinity"/>
         </VBox>
