@@ -2,6 +2,8 @@ package com.fu.cinema.desktop.controller;
 
 import com.fu.cinema.desktop.facade.AuthFacade;
 import com.fu.cinema.desktop.session.DesktopSession;
+import com.fu.cinema.desktop.util.AlertUtil;
+import com.fu.cinema.desktop.util.FxAsync;
 import com.fu.cinema.navigation.SceneManager;
 import com.fu.cinema.navigation.View;
 import javafx.application.Platform;
@@ -46,9 +48,14 @@ public class LoginController {
         progress.setVisible(true);
         fxAsync.run(() -> authFacade.loginAdmin(username, password),
                 user -> {
-                    progress.setVisible(false);
-                    session.login(user);
-                    sceneManager.switchTo(View.MAIN);
+                    try {
+                        progress.setVisible(false);
+                        session.login(user);
+                        sceneManager.switchTo(View.MAIN);
+                    } catch (Exception ex) {
+                        progress.setVisible(false);
+                        AlertUtil.showError(ex);
+                    }
                 },
                 ex -> {
                     progress.setVisible(false);

@@ -1,9 +1,10 @@
 package com.fu.cinema.desktop.controller;
 
+import com.fu.cinema.desktop.facade.DashboardFacade;
 import com.fu.cinema.desktop.model.DashboardData;
-import com.fu.cinema.desktop.model.DashboardFacade;
 import com.fu.cinema.desktop.util.FxAsync;
 import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
@@ -11,6 +12,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

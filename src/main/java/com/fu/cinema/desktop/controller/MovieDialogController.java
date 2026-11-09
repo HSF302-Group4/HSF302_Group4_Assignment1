@@ -115,22 +115,21 @@ public class MovieDialogController {
     }
 
     private void fill(MovieForm f) {
-        if (f == null) {
-            f = new MovieForm();
-        }
-        this.movieId = f.getMovieId();
-        tfTitle.setText(f.getTitle() != null ? f.getTitle() : "");
-        tfDirector.setText(f.getDirector() != null ? f.getDirector() : "");
-        spDuration.getValueFactory().setValue(f.getDuration() != null ? f.getDuration() : 120);
-        dpRelease.setValue(f.getReleaseDate() != null ? f.getReleaseDate() : LocalDate.now());
-        cbAgeRating.setValue(f.getAgeRating() != null ? f.getAgeRating() : AgeRating.P);
-        cbStatus.setValue(f.getStatus() != null ? f.getStatus() : MovieStatus.SHOWING);
-        tfPoster.setText(f.getPosterUrl() != null ? f.getPosterUrl() : "");
-        taDescription.setText(f.getDescription() != null ? f.getDescription() : "");
+        MovieForm data = (f != null) ? f : new MovieForm();
+        this.movieId = data.getMovieId();
+        tfTitle.setText(data.getTitle() != null ? data.getTitle() : "");
+        tfDirector.setText(data.getDirector() != null ? data.getDirector() : "");
+        spDuration.getValueFactory().setValue(data.getDuration() != null ? data.getDuration() : 120);
+        dpRelease.setValue(data.getReleaseDate() != null ? data.getReleaseDate() : LocalDate.now());
+        cbAgeRating.setValue(data.getAgeRating() != null ? data.getAgeRating() : AgeRating.P);
+        cbStatus.setValue(data.getStatus() != null ? data.getStatus() : MovieStatus.SHOWING);
+        tfPoster.setText(data.getPosterUrl() != null ? data.getPosterUrl() : "");
+        taDescription.setText(data.getDescription() != null ? data.getDescription() : "");
 
-        if (f.getGenreId() != null) {
+        Long targetGenreId = data.getGenreId();
+        if (targetGenreId != null) {
             cbGenre.getItems().stream()
-                    .filter(g -> g != null && g.id().equals(f.getGenreId()))
+                    .filter(g -> g != null && g.id().equals(targetGenreId))
                     .findFirst()
                     .ifPresent(cbGenre::setValue);
         } else if (!cbGenre.getItems().isEmpty()) {

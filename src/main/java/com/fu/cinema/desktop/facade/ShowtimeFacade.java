@@ -2,7 +2,10 @@ package com.fu.cinema.desktop.facade;
 
 import com.fu.cinema.desktop.model.MovieItem;
 import com.fu.cinema.desktop.model.PageResult;
+import com.fu.cinema.desktop.model.RoomItem;
+import com.fu.cinema.desktop.model.ShowtimeRow;
 import com.fu.cinema.desktop.session.DesktopSession;
+import com.fu.cinema.dto.ShowtimeForm;
 import com.fu.cinema.service.MovieService;
 import com.fu.cinema.service.RoomService;
 import com.fu.cinema.service.ShowtimeService;
