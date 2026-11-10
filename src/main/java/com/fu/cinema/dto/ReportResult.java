@@ -1,28 +1,22 @@
 package com.fu.cinema.dto;
 
 import com.fu.cinema.entity.Booking;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Value
 public class ReportResult {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private List<MovieRevenueDTO> revenueByMovie;
-    private List<Booking> bookings;
-    private long totalBookings;
-    private long totalTickets;
-    private BigDecimal totalRevenue;
+    LocalDate startDate;
+    LocalDate endDate;
+    List<MovieRevenueDTO> revenueByMovie;
+    List<Booking> bookings;
+    long totalBookings;
+    long totalTickets;
+    BigDecimal totalRevenue;
 
     public boolean isEmpty() {
         return bookings == null || bookings.isEmpty();

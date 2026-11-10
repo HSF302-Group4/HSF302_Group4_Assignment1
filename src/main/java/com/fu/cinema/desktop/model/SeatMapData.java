@@ -14,5 +14,4 @@ public record SeatMapData(
         List<String> rowLabels,
         int seatsPerRow,
         Set<String> soldSeats
-
 ) {}
