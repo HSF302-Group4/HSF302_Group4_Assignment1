@@ -85,8 +85,12 @@ public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
             ORDER BY r.room_name
             """, nativeQuery = true)
     List<RoomShowtimeCount> countTodayShowtimesByRoom();
-
-
+//todo26
+    @Query("SELECT r.roomName AS roomName, COUNT(s.showtimeId) AS showtimeCount " +
+            "FROM Room r LEFT JOIN Showtime s ON s.room.roomId = r.roomId " +
+            "AND s.startTime >= :startOfDay AND s.startTime < :endOfDay " +
+            "GROUP BY r.roomName ORDER BY r.roomName ASC")
+    List<RoomShowtimeCount> countTodayByRoom(@Param("startOfDay") LocalDateTime startOfDay, @Param("endOfDay") LocalDateTime endOfDay);
 
 
 
