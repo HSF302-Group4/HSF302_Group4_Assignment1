@@ -27,15 +27,15 @@ public class ReportServiceImpl implements ReportService {
         if (startDate == null || endDate == null) {
             throw new BusinessException("Vui lòng chọn đầy đủ từ ngày và đến ngày");
         }
-        if (startDate.isAfter(endDate)) {                                                 // BR-15
+        if (startDate.isAfter(endDate)) { // BR-15
             throw new BusinessException("Từ ngày phải trước hoặc bằng đến ngày");
         }
-        // [startDate 00:00, endDate + 1 ngày 00:00) → bao gồm trọn ngày cuối
+        // [startDate 00:00, endDate + 1 ngày 00:00) -> bao gồm trọn ngày cuối
         LocalDateTime from = startDate.atStartOfDay();
         LocalDateTime to = endDate.plusDays(1).atStartOfDay();
 
-        List<MovieRevenueDTO> byMovie = bookingRepository.revenueByMovie(from, to);        // giảm dần doanh thu
-        List<Booking> bookings = bookingRepository.findConfirmedInPeriod(from, to);       // giảm dần ngày đặt
+        List<MovieRevenueDTO> byMovie = bookingRepository.revenueByMovie(from, to);
+        List<Booking> bookings = bookingRepository.findConfirmedInPeriod(from, to);
 
         long totalTickets = byMovie.stream().mapToLong(MovieRevenueDTO::getTicketCount).sum();
         BigDecimal totalRevenue = byMovie.stream()
